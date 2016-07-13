@@ -28,12 +28,12 @@
             <tbody>
             <% for(var i=0; i<books.length; i++) {%>
                 <tr>
-                    <td><a href=""><%= books[i].name %></a></td>
+                    <td><a href='/detail/<%= books[i]._id %>'><%= books[i].name %></a></td>
                     <td><%= books[i].author %></td>
                     <td><%= books[i].publisher %></td>
                     <td><%= books[i].price %></td>
-                    <td><button class="btn btn-primary">Edit</button></td>
-                    <td><button class="btn btn-danger">Delete</button></td>
+                    <td><a href="/edit/<%= books[i]._id %>" class="btn btn-primary">Edit</a></td>
+                    <td><a class="btn btn-danger">Delete</a></td>
                 </tr>
             <% } %>
             </tbody>
