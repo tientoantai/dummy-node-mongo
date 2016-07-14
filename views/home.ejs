@@ -13,7 +13,18 @@
 <div class="container">
 	<div class="page-header"><h1 class="text-center">List of Books</h1></div>
     <div class="col-md-offset-2 col-md-8">
-    <a class="btn btn-info" href="/add-new">Add new</a>
+    	<form action="/search" method="get" role="form">
+            <div class="input-group">
+                <input type="text" class="form-control" name="keyWord" 
+                value="<%= keyWord %>" 
+                placeholder="Search for...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </span>
+        	</div><!-- /input-group -->
+        </form>
         <table class="table">
             <thead>
             <tr>

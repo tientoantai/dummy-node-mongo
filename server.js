@@ -22,7 +22,15 @@ MongoClient.connect('mongodb://localhost:27017/test', (err, database) => {
 		dbCollection.find().toArray((err, result) => {
 		    if (err) return console.log(err)
 		    // renders index.ejs
-		    res.render('home.ejs', {books: result})
+		    res.render('home.ejs', {books: result, keyWord:''})
+  		})
+	});
+
+	app.get('/search', (req, res)=>{
+		var keyword = req.param('keyWord');
+		dbCollection.find({name:{$regex:keyword}}).toArray((err, result) => {
+		    if (err) return console.log(err)
+		    res.render('home.ejs', {books: result, keyWord:keyword})
   		})
 	});
 
