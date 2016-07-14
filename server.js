@@ -8,7 +8,9 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 app.set('view engine', 'ejs')
 
-const MongoClient = require('mongodb').MongoClient
+const mongo = require('mongodb');
+
+const MongoClient = mongo.MongoClient
 
 var db
 
@@ -19,9 +21,16 @@ MongoClient.connect('mongodb://localhost:27017/test', (err, database) => {
 	app.get('/', function(req, res){
 		dbCollection.find().toArray((err, result) => {
 		    if (err) return console.log(err)
-		    	console.log(result);
 		    // renders index.ejs
-		    res.render('home.ejs', {books: result})
+		    res.render('home.ejs', {books: result, keyWord:''})
+  		})
+	});
+
+	app.get('/search', (req, res)=>{
+		var keyword = req.param('keyWord');
+		dbCollection.find({name:{$regex:keyword}}).toArray((err, result) => {
+		    if (err) return console.log(err)
+		    res.render('home.ejs', {books: result, keyWord:keyword})
   		})
 	});
 
@@ -32,10 +41,33 @@ MongoClient.connect('mongodb://localhost:27017/test', (err, database) => {
 	app.post('/add',function(req, res){
 		dbCollection.save(req.body, (err, result) => {
 	    if (err) return console.log(err)
-
-	    console.log(result)
 	    res.redirect('/')
 	  })
+	});
+
+	app.get('/detail/:bookId', function(req, res){
+		dbCollection.findOne({'_id': mongo.ObjectID(req.params.bookId)}, function(err, result){
+
+		    if (err) return console.log(err)
+		    // renders index.ejs
+		    res.render('detal.ejs', {book: result})
+  		})
+	});
+
+	app.get('/edit/:bookId', function(req, res){
+		dbCollection.findOne({'_id': mongo.ObjectID(req.params.bookId)}, function(err, result){
+
+		    if (err) return console.log(err)
+		    // renders index.ejs
+		    res.render('edit.ejs', {book: result})
+  		})
+	});
+
+	app.post('/update/:bookId', function(req, res){
+		dbCollection.updateOne({'_id': mongo.ObjectID(req.params.bookId)}, {$set:req.body}, (err, result) => {
+		    if (err) return console.log(err)
+		    res.redirect('/')
+		})
 	});
 
   app.listen(1234, () => {
